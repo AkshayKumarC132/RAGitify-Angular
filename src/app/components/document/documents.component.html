@@ -1,0 +1,44 @@
+<section class="documents">
+  <header class="documents__header">
+    <div>
+      <h1 class="documents__title">Documents</h1>
+      <p class="documents__subtitle">Manage your uploaded knowledge sources</p>
+    </div>
+    <div class="documents__actions">
+      <button type="button" class="documents__primary-action">Upload Document</button>
+    </div>
+  </header>
+
+  <div class="documents__overview">
+    <article class="documents__stat">
+      <span class="documents__stat-label">Total documents</span>
+      <span class="documents__stat-value">{{ documents.length }}</span>
+    </article>
+    <article class="documents__stat">
+      <span class="documents__stat-label">Vector stores</span>
+      <span class="documents__stat-value">{{ vectorStores.length }}</span>
+    </article>
+  </div>
+
+  <section class="documents__panel" *ngIf="documents.length > 0; else emptyDocuments">
+    <div class="documents__grid">
+      <article class="documents__card" *ngFor="let doc of documents">
+        <header class="documents__card-header">
+          <h2 class="documents__card-title">{{ doc.title }}</h2>
+          <span class="documents__status" [class.documents__status--processing]="doc.status !== 'completed'">
+            {{ doc.status | titlecase }}
+          </span>
+        </header>
+        <p class="documents__card-meta">Uploaded {{ doc.uploaded_at | date:'medium' }}</p>
+      </article>
+    </div>
+  </section>
+
+  <ng-template #emptyDocuments>
+    <div class="documents__empty">
+      <div class="documents__empty-icon"></div>
+      <h2>No documents yet</h2>
+      <p>Upload your first document to begin enriching your retrieval pipeline.</p>
+    </div>
+  </ng-template>
+</section>

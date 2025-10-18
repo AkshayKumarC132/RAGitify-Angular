@@ -1,0 +1,38 @@
+<section class="vectors">
+  <header class="vectors__header">
+    <div>
+      <h1 class="vectors__title">Vector Stores</h1>
+      <p class="vectors__subtitle">Manage embeddings storage and retrieval configurations</p>
+    </div>
+    <button type="button" class="vectors__primary-action">Create Vector Store</button>
+  </header>
+
+  <section class="vectors__panel" *ngIf="vectorStores.length > 0; else emptyVectors">
+    <div class="vectors__grid">
+      <article class="vectors__card" *ngFor="let store of vectorStores">
+        <header class="vectors__card-header">
+          <h2 class="vectors__card-title">{{ store.name }}</h2>
+          <span class="vectors__badge">{{ store.user }}</span>
+        </header>
+        <dl class="vectors__meta">
+          <div>
+            <dt>Identifier</dt>
+            <dd>{{ store.id }}</dd>
+          </div>
+          <div>
+            <dt>Created</dt>
+            <dd>{{ store.created_at | date:'medium' }}</dd>
+          </div>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <ng-template #emptyVectors>
+    <div class="vectors__empty">
+      <div class="vectors__empty-icon"></div>
+      <h2>No vector stores yet</h2>
+      <p>Spin up your first vector store to unlock document-grounded chat experiences.</p>
+    </div>
+  </ng-template>
+</section>

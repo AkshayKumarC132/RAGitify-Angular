@@ -1,0 +1,34 @@
+<section class="assistants">
+  <header class="assistants__header">
+    <div>
+      <h1 class="assistants__title">Assistants</h1>
+      <p class="assistants__subtitle">Configure reusable AI personas for your organisation</p>
+    </div>
+    <button type="button" class="assistants__primary-action">Create Assistant</button>
+  </header>
+
+  <section class="assistants__panel" *ngIf="assistants.length > 0; else emptyAssistants">
+    <div class="assistants__grid">
+      <article class="assistants__card" *ngFor="let assistant of assistants">
+        <header class="assistants__card-header">
+          <div>
+            <h2 class="assistants__card-title">{{ assistant.name }}</h2>
+            <p class="assistants__card-meta">Model: {{ assistant.model || 'Default' }}</p>
+          </div>
+          <span class="assistants__badge">{{ assistant.created_at | date:'mediumDate' }}</span>
+        </header>
+        <p class="assistants__description">
+          {{ assistant.instructions || 'No instructions provided yet.' }}
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <ng-template #emptyAssistants>
+    <div class="assistants__empty">
+      <div class="assistants__empty-icon"></div>
+      <h2>No assistants yet</h2>
+      <p>Create a dedicated assistant to streamline your RAG experiences.</p>
+    </div>
+  </ng-template>
+</section>

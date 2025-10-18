@@ -1,112 +1,116 @@
-<div class="flex h-screen bg-gray-50">
-  <!-- Sidebar -->
-  <aside 
-    [class.w-64]="isSidebarOpen" 
-    [class.w-20]="!isSidebarOpen"
-    class="bg-gray-900 text-white transition-all duration-300 ease-in-out flex flex-col"
-  >
-    <!-- Logo and Toggle -->
-    <div class="p-4 flex items-center justify-between border-b border-gray-700">
-      <h1 *ngIf="isSidebarOpen" class="text-xl font-bold">RAGitify</h1>
-      <button 
-        (click)="toggleSidebar()" 
-        class="p-2 rounded-lg hover:bg-gray-800 transition-colors"
+<div class="dashboard" [class.dashboard--sidebar-collapsed]="!isSidebarOpen">
+  <aside class="dashboard__sidebar" [class.dashboard__sidebar--collapsed]="!isSidebarOpen">
+    <div class="dashboard__brand-row">
+      <h1 *ngIf="isSidebarOpen" class="dashboard__brand">RAGitify</h1>
+      <button
+        type="button"
+        class="dashboard__toggle"
+        (click)="toggleSidebar()"
         [attr.aria-label]="isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'"
       >
-        <svg *ngIf="isSidebarOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path>
-        </svg>
-        <svg *ngIf="!isSidebarOpen" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
-        </svg>
+        <span class="dashboard__toggle-icon" [class.dashboard__toggle-icon--collapsed]="!isSidebarOpen"></span>
       </button>
     </div>
 
-    <!-- Navigation -->
-    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-      <a 
-        routerLink="/dashboard/chat" 
-        routerLinkActive="bg-indigo-600"
-        class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-colors"
-        [class.justify-center]="!isSidebarOpen"
+    <nav class="dashboard__nav">
+      <a
+        class="dashboard__nav-item"
+        routerLink="/dashboard/chat"
+        routerLinkActive="dashboard__nav-item--active"
+        [class.dashboard__nav-item--icon-only]="!isSidebarOpen"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-        </svg>
-        <span *ngIf="isSidebarOpen">Chat</span>
+        <span class="dashboard__nav-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 4c-4.97 0-9 3.13-9 7s4.03 7 9 7c1.51 0 2.95-.27 4.24-.76L21 20l-1.49-3.66C20.45 14.45 21 13.27 21 12c0-3.87-4.03-7-9-7Zm-4 8.5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1Zm4 0a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1Zm4 0a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1Z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        <span class="dashboard__nav-label" *ngIf="isSidebarOpen">Chat</span>
       </a>
 
-      <a 
-        routerLink="/dashboard/documents" 
-        routerLinkActive="bg-indigo-600"
-        class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-colors"
-        [class.justify-center]="!isSidebarOpen"
+      <a
+        class="dashboard__nav-item"
+        routerLink="/dashboard/documents"
+        routerLinkActive="dashboard__nav-item--active"
+        [class.dashboard__nav-item--icon-only]="!isSidebarOpen"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-        </svg>
-        <span *ngIf="isSidebarOpen">Documents</span>
+        <span class="dashboard__nav-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M14 2H7a2 2 0 0 0-2 2v16a1 1 0 0 0 1.447.895L12 18.618l5.553 2.277A1 1 0 0 0 19 20V8.414a2 2 0 0 0-.586-1.414l-3.414-3.414A2 2 0 0 0 14 2Z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        <span class="dashboard__nav-label" *ngIf="isSidebarOpen">Documents</span>
       </a>
 
-      <a 
-        routerLink="/dashboard/vector-stores" 
-        routerLinkActive="bg-indigo-600"
-        class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-colors"
-        [class.justify-center]="!isSidebarOpen"
+      <a
+        class="dashboard__nav-item"
+        routerLink="/dashboard/vector-stores"
+        routerLinkActive="dashboard__nav-item--active"
+        [class.dashboard__nav-item--icon-only]="!isSidebarOpen"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-        </svg>
-        <span *ngIf="isSidebarOpen">Vector Stores</span>
+        <span class="dashboard__nav-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M19 11H5a2 2 0 0 0-2 2v6c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2Zm0-2V7a2 2 0 0 0-2-2h-3V3a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v2h17Z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        <span class="dashboard__nav-label" *ngIf="isSidebarOpen">Vector Stores</span>
       </a>
 
-      <a 
-        routerLink="/dashboard/assistants" 
-        routerLinkActive="bg-indigo-600"
-        class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-colors"
-        [class.justify-center]="!isSidebarOpen"
+      <a
+        class="dashboard__nav-item"
+        routerLink="/dashboard/assistants"
+        routerLinkActive="dashboard__nav-item--active"
+        [class.dashboard__nav-item--icon-only]="!isSidebarOpen"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-        </svg>
-        <span *ngIf="isSidebarOpen">Assistants</span>
+        <span class="dashboard__nav-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M20 4H4a2 2 0 0 0-2 2v7c0 1.105.895 2 2 2h1.172a3 3 0 0 1 2.122.879L9 20h6l1.707-4.121A3 3 0 0 1 18.828 13H20a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        <span class="dashboard__nav-label" *ngIf="isSidebarOpen">Assistants</span>
       </a>
 
-      <a 
-        routerLink="/dashboard/settings" 
-        routerLinkActive="bg-indigo-600"
-        class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-colors"
-        [class.justify-center]="!isSidebarOpen"
+      <a
+        class="dashboard__nav-item"
+        routerLink="/dashboard/settings"
+        routerLinkActive="dashboard__nav-item--active"
+        [class.dashboard__nav-item--icon-only]="!isSidebarOpen"
       >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-        </svg>
-        <span *ngIf="isSidebarOpen">Settings</span>
+        <span class="dashboard__nav-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M19.14 12.936a7.958 7.958 0 0 0 .063-.936 7.958 7.958 0 0 0-.063-.936l2.036-1.59a.5.5 0 0 0 .122-.642l-1.928-3.338a.5.5 0 0 0-.607-.228l-2.397.96a7.99 7.99 0 0 0-1.62-.936l-.364-2.544A.5.5 0 0 0 13.912 2h-3.824a.5.5 0 0 0-.495.42l-.364 2.544a7.99 7.99 0 0 0-1.62.936l-2.397-.96a.5.5 0 0 0-.607.228L2.677 8.506a.5.5 0 0 0 .122.642l2.036 1.59a7.958 7.958 0 0 0-.063.936c0 .316.022.626.063.936l-2.036 1.59a.5.5 0 0 0-.122.642l1.928 3.338a.5.5 0 0 0 .607.228l2.397-.96c.5.39 1.04.714 1.62.936l.364 2.544a.5.5 0 0 0 .495.42h3.824a.5.5 0 0 0 .495-.42l.364-2.544c.58-.222 1.12-.546 1.62-.936l2.397.96a.5.5 0 0 0 .607-.228l1.928-3.338a.5.5 0 0 0-.122-.642l-2.036-1.59ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        <span class="dashboard__nav-label" *ngIf="isSidebarOpen">Settings</span>
       </a>
     </nav>
 
-    <!-- User Profile -->
-    <div class="p-4 border-t border-gray-700">
-      <div class="flex items-center space-x-3" [class.justify-center]="!isSidebarOpen">
-        <div class="w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center font-semibold">
-          {{ (user?.email?.charAt(0) ?? 'U').toUpperCase() }}
-        </div>
-        <div *ngIf="isSidebarOpen" class="flex-1 min-w-0">
-          <p class="text-sm font-medium truncate">{{ user?.email }}</p>
-          <button 
-            (click)="logout()" 
-            class="text-xs text-gray-400 hover:text-white transition-colors"
-          >
-            Logout
-          </button>
-        </div>
+    <footer class="dashboard__profile" [class.dashboard__profile--centered]="!isSidebarOpen">
+      <div class="dashboard__avatar">
+        {{ (user?.email?.charAt(0) ?? 'U').toUpperCase() }}
       </div>
-    </div>
+      <div *ngIf="isSidebarOpen" class="dashboard__profile-info">
+        <p class="dashboard__profile-name">{{ user?.email }}</p>
+        <button type="button" class="dashboard__signout" (click)="logout()">Logout</button>
+      </div>
+    </footer>
   </aside>
 
-  <!-- Main Content -->
-  <main class="flex-1 overflow-hidden">
+  <main class="dashboard__content">
     <router-outlet></router-outlet>
   </main>
 </div>

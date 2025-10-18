@@ -1,170 +1,111 @@
-<div class="flex h-full bg-white">
-  <!-- Thread Sidebar -->
-  <aside class="w-64 bg-gray-50 border-r border-gray-200 flex flex-col">
-    <div class="p-4 border-b border-gray-200">
-      <button
-        (click)="createNewThread()"
-        class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center space-x-2"
-      >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-        </svg>
-        <span>New Chat</span>
+<div class="chat">
+  <aside class="chat__sidebar">
+    <div class="chat__sidebar-header">
+      <button class="chat__new-thread" type="button" (click)="createNewThread()">
+        <span class="chat__new-thread-icon">+</span>
+        <span class="chat__new-thread-label">New Chat</span>
       </button>
     </div>
 
-    <div class="flex-1 overflow-y-auto p-2">
-      <div *ngFor="let thread of threads" 
+    <div class="chat__threads" *ngIf="threads.length > 0; else noThreads">
+      <article
+        class="chat__thread"
+        *ngFor="let thread of threads"
         (click)="selectThread(thread)"
-        [class.bg-indigo-100]="currentThread?.id === thread.id"
-        class="p-3 mb-2 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors"
+        [class.chat__thread--active]="currentThread?.id === thread.id"
       >
-        <p class="text-sm font-medium text-gray-900 truncate">{{ thread.title }}</p>
-        <p class="text-xs text-gray-500">{{ thread.created_at | date:'short' }}</p>
-      </div>
-
-      <div *ngIf="threads.length === 0" class="text-center text-gray-500 text-sm mt-4">
-        No conversations yet
-      </div>
+        <h3 class="chat__thread-title">{{ thread.title }}</h3>
+        <p class="chat__thread-meta">{{ thread.created_at | date:'short' }}</p>
+      </article>
     </div>
+
+    <ng-template #noThreads>
+      <div class="chat__empty-thread">
+        <p>No conversations yet</p>
+      </div>
+    </ng-template>
   </aside>
 
-  <!-- Chat Area -->
-  <div class="flex-1 flex flex-col">
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 p-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-semibold text-gray-900">
-            {{ currentThread?.title || 'Select a conversation' }}
-          </h2>
-          <p *ngIf="selectedAssistant" class="text-sm text-gray-500">
-            Using: {{ selectedAssistant.name }}
-          </p>
-        </div>
+  <section class="chat__workspace">
+    <header class="chat__workspace-header">
+      <div class="chat__context">
+        <h2 class="chat__title">{{ currentThread?.title || 'Select a conversation' }}</h2>
+        <p class="chat__subtitle" *ngIf="selectedAssistant">Using: {{ selectedAssistant.name }}</p>
+      </div>
 
-        <div *ngIf="assistants.length > 0" class="flex items-center space-x-2">
-          <label class="text-sm text-gray-600">Assistant:</label>
-          <select
-            [(ngModel)]="selectedAssistant"
-            class="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            <option *ngFor="let assistant of assistants" [ngValue]="assistant">
-              {{ assistant.name }}
-            </option>
-          </select>
-        </div>
+      <div class="chat__assistant-select" *ngIf="assistants.length > 0">
+        <label class="chat__assistant-label" for="assistant">Assistant</label>
+        <select
+          id="assistant"
+          class="chat__assistant-input"
+          [(ngModel)]="selectedAssistant"
+        >
+          <option *ngFor="let assistant of assistants" [ngValue]="assistant">
+            {{ assistant.name }}
+          </option>
+        </select>
       </div>
     </header>
 
-    <!-- Messages -->
-    <div 
-      #messagesContainer
-      class="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
-    >
-      <div *ngIf="isLoading" class="flex justify-center items-center h-full">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+    <div class="chat__messages" #messagesContainer>
+      <div *ngIf="isLoading" class="chat__loading">
+        <span class="chat__loading-spinner"></span>
       </div>
 
-      <div *ngIf="!isLoading && messages.length === 0" class="flex flex-col items-center justify-center h-full text-gray-500">
-        <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-        </svg>
-        <p class="text-lg">Start a conversation</p>
-        <p class="text-sm">Type a message below to begin</p>
+      <div *ngIf="!isLoading && messages.length === 0" class="chat__empty-state">
+        <div class="chat__empty-illustration"></div>
+        <p class="chat__empty-title">Start a conversation</p>
+        <p class="chat__empty-subtitle">Type a message below to begin</p>
       </div>
 
-      <div *ngFor="let message of messages" 
-        [class.justify-end]="message.role === 'user'"
-        class="flex"
+      <div
+        *ngFor="let message of messages"
+        class="chat__message"
+        [class.chat__message--outgoing]="message.role === 'user'"
       >
-        <div 
-          [class.bg-indigo-600]="message.role === 'user'"
-          [class.text-white]="message.role === 'user'"
-          [class.bg-white]="message.role === 'assistant'"
-          [class.text-gray-900]="message.role === 'assistant'"
-          class="max-w-3xl p-4 rounded-2xl shadow-sm"
-        >
-          <div class="flex items-start space-x-2 mb-2">
-            <div 
-              [class.bg-indigo-700]="message.role === 'user'"
-              [class.bg-indigo-100]="message.role === 'assistant'"
-              class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-            >
-              <span 
-                [class.text-white]="message.role === 'user'"
-                [class.text-indigo-600]="message.role === 'assistant'"
-                class="text-sm font-semibold"
-              >
-                {{ message.role === 'user' ? 'U' : 'A' }}
-              </span>
-            </div>
-            <div class="flex-1">
-              <p class="text-sm font-medium mb-1">
-                {{ message.role === 'user' ? 'You' : 'Assistant' }}
-              </p>
-              <p class="whitespace-pre-wrap">{{ message.content }}</p>
-            </div>
+        <div class="chat__message-avatar" [class.chat__message-avatar--accent]="message.role === 'user'">
+          <span>{{ message.role === 'user' ? 'U' : 'A' }}</span>
+        </div>
+        <div class="chat__message-content">
+          <div class="chat__message-heading">
+            <span class="chat__message-author">{{ message.role === 'user' ? 'You' : 'Assistant' }}</span>
+            <span class="chat__message-time">{{ message.created_at | date:'short' }}</span>
           </div>
+          <p class="chat__message-body">{{ message.content }}</p>
 
-          <div *ngIf="message.role === 'assistant'" class="flex items-center space-x-2 mt-2 ml-10">
-            <button 
-              (click)="giveFeedback(message, 'positive')"
-              class="text-xs text-gray-500 hover:text-green-600 transition-colors"
-              title="Helpful"
-            >
-              👍
-            </button>
-            <button 
-              (click)="giveFeedback(message, 'negative')"
-              class="text-xs text-gray-500 hover:text-red-600 transition-colors"
-              title="Not helpful"
-            >
-              👎
-            </button>
+          <div *ngIf="message.role === 'assistant'" class="chat__feedback">
+            <button type="button" (click)="giveFeedback(message, 'positive')">Helpful</button>
+            <button type="button" (click)="giveFeedback(message, 'negative')">Not helpful</button>
           </div>
-
-          <p class="text-xs opacity-70 mt-2 ml-10">
-            {{ message.created_at | date:'short' }}
-          </p>
         </div>
       </div>
 
-      <div *ngIf="isSending" class="flex">
-        <div class="bg-white p-4 rounded-2xl shadow-sm max-w-3xl">
-          <div class="flex items-center space-x-2">
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+      <div *ngIf="isSending" class="chat__message chat__message--typing">
+        <div class="chat__message-avatar">
+          <span>A</span>
+        </div>
+        <div class="chat__message-content">
+          <div class="chat__typing-dots">
+            <span></span><span></span><span></span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Input Area -->
-    <div class="bg-white border-t border-gray-200 p-4">
-      <form [formGroup]="messageForm" (ngSubmit)="sendMessage()" class="flex space-x-3">
+    <footer class="chat__composer">
+      <form class="chat__composer-form" [formGroup]="messageForm" (ngSubmit)="sendMessage()">
         <textarea
+          class="chat__input"
           formControlName="content"
           placeholder="Type your message..."
           rows="1"
-          class="flex-1 resize-none border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           (keydown.enter)="$any($event).shiftKey || sendMessage(); $any($event).shiftKey || $event.preventDefault()"
         ></textarea>
-        <button
-          type="submit"
-          [disabled]="messageForm.invalid || isSending || !currentThread"
-          class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-          </svg>
+        <button class="chat__send" type="submit" [disabled]="messageForm.invalid || isSending || !currentThread">
           <span>Send</span>
         </button>
       </form>
-      <p class="text-xs text-gray-500 mt-2">
-        Press Enter to send, Shift+Enter for new line
-      </p>
-    </div>
-  </div>
+      <p class="chat__hint">Press Enter to send, Shift+Enter for new line</p>
+    </footer>
+  </section>
 </div>
