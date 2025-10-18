@@ -4,8 +4,30 @@
       <h1 class="vectors__title">Vector Stores</h1>
       <p class="vectors__subtitle">Manage embeddings storage and retrieval configurations</p>
     </div>
-    <button type="button" class="vectors__primary-action">Create Vector Store</button>
+    <button type="button" class="vectors__primary-action" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Cancel' : 'Create Vector Store' }}
+    </button>
   </header>
+
+  <section class="vectors__creator" *ngIf="showCreateForm">
+    <form [formGroup]="createForm" (ngSubmit)="submitCreate()" class="vectors__form">
+      <div class="vectors__field">
+        <label for="vector-name">Name</label>
+        <input id="vector-name" type="text" formControlName="name" placeholder="Customer knowledge base" />
+        <span class="vectors__error" *ngIf="createForm.get('name')?.invalid && createForm.get('name')?.touched">
+          Provide a descriptive name (minimum 3 characters).
+        </span>
+      </div>
+
+      <div class="vectors__actions">
+        <button type="submit" class="vectors__primary-action" [disabled]="isCreating">
+          {{ isCreating ? 'Creating…' : 'Save vector store' }}
+        </button>
+      </div>
+
+      <p class="vectors__error" *ngIf="createError" aria-live="assertive">{{ createError }}</p>
+    </form>
+  </section>
 
   <section class="vectors__panel" *ngIf="vectorStores.length > 0; else emptyVectors">
     <div class="vectors__grid">

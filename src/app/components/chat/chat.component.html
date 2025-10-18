@@ -45,6 +45,19 @@
           </option>
         </select>
       </div>
+
+      <div class="chat__vector-select" *ngIf="vectorStores.length > 0">
+        <label class="chat__vector-label" for="vector-store">Vector store</label>
+        <select
+          id="vector-store"
+          class="chat__vector-input"
+          [(ngModel)]="selectedVectorStore"
+        >
+          <option *ngFor="let store of vectorStores" [ngValue]="store">
+            {{ store.name }}
+          </option>
+        </select>
+      </div>
     </header>
 
     <div class="chat__messages" #messagesContainer>
@@ -56,6 +69,9 @@
         <div class="chat__empty-illustration"></div>
         <p class="chat__empty-title">Start a conversation</p>
         <p class="chat__empty-subtitle">Type a message below to begin</p>
+        <p class="chat__empty-caption" *ngIf="vectorStores.length === 0">
+          Add a vector store before creating your first thread.
+        </p>
       </div>
 
       <div
@@ -101,10 +117,20 @@
           rows="1"
           (keydown.enter)="$any($event).shiftKey || sendMessage(); $any($event).shiftKey || $event.preventDefault()"
         ></textarea>
-        <button class="chat__send" type="submit" [disabled]="messageForm.invalid || isSending || !currentThread">
+        <button
+          class="chat__send"
+          type="submit"
+          [disabled]="
+            messageForm.invalid ||
+            isSending ||
+            (!currentThread && !selectedVectorStore)
+          "
+        >
           <span>Send</span>
         </button>
       </form>
+      <p class="chat__error" *ngIf="threadError" aria-live="assertive">{{ threadError }}</p>
+      <p class="chat__hint" *ngIf="isCreatingThread">Creating thread...</p>
       <p class="chat__hint">Press Enter to send, Shift+Enter for new line</p>
     </footer>
   </section>

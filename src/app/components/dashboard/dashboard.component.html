@@ -15,6 +15,23 @@
     <nav class="dashboard__nav">
       <a
         class="dashboard__nav-item"
+        routerLink="/dashboard/overview"
+        routerLinkActive="dashboard__nav-item--active"
+        [class.dashboard__nav-item--icon-only]="!isSidebarOpen"
+      >
+        <span class="dashboard__nav-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 3 1 9l11 6 9-4.91V17h2V9L12 3Zm0 9.72L4.74 9 12 4.28 19.26 9 12 12.72ZM3 11v8h6v-4h6v4h6v-7.91l-9 5L3 11Z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
+        <span class="dashboard__nav-label" *ngIf="isSidebarOpen">Overview</span>
+      </a>
+
+      <a
+        class="dashboard__nav-item"
         routerLink="/dashboard/chat"
         routerLinkActive="dashboard__nav-item--active"
         [class.dashboard__nav-item--icon-only]="!isSidebarOpen"

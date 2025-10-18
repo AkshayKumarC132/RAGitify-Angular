@@ -5,9 +5,48 @@
       <p class="documents__subtitle">Manage your uploaded knowledge sources</p>
     </div>
     <div class="documents__actions">
-      <button type="button" class="documents__primary-action">Upload Document</button>
+      <button type="button" class="documents__primary-action" (click)="toggleUploadForm()">
+        {{ showUploadForm ? 'Cancel' : 'Upload Document' }}
+      </button>
     </div>
   </header>
+
+  <section class="documents__upload" *ngIf="showUploadForm">
+    <p class="documents__help" *ngIf="vectorStores.length === 0">
+      Create a vector store before ingesting documents.
+    </p>
+    <form [formGroup]="uploadForm" (ngSubmit)="submitUpload()" class="documents__form">
+      <div class="documents__field">
+        <label for="vector-store">Vector store</label>
+        <select id="vector-store" formControlName="vector_store_id">
+          <option value="" disabled>Select a vector store</option>
+          <option *ngFor="let store of vectorStores" [value]="store.id">{{ store.name }}</option>
+        </select>
+        <span class="documents__error" *ngIf="uploadForm.get('vector_store_id')?.invalid && uploadForm.get('vector_store_id')?.touched">
+          Choose the vector store that should receive this document.
+        </span>
+      </div>
+
+      <div class="documents__field">
+        <label for="document-file">File</label>
+        <input id="document-file" type="file" (change)="onFileSelected($event)" />
+        <p class="documents__help">Upload a file or provide an S3 URL below.</p>
+      </div>
+
+      <div class="documents__field">
+        <label for="s3-url">S3 URL</label>
+        <input id="s3-url" type="url" formControlName="s3_file_url" placeholder="https://bucket.s3.amazonaws.com/file.pdf" />
+      </div>
+
+      <div class="documents__actions documents__actions--form">
+        <button type="submit" class="documents__primary-action" [disabled]="isUploading">
+          {{ isUploading ? 'Uploading…' : 'Ingest document' }}
+        </button>
+      </div>
+
+      <p class="documents__error" *ngIf="uploadError" aria-live="assertive">{{ uploadError }}</p>
+    </form>
+  </section>
 
   <div class="documents__overview">
     <article class="documents__stat">
