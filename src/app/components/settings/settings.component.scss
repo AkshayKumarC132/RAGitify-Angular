@@ -4,17 +4,15 @@
 }
 
 .settings {
-  padding: 2.5rem clamp(1.5rem, 3vw, 3rem);
+  padding-inline: clamp(1.5rem, 3vw, 3rem);
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: clamp(1.5rem, 2.5vw, 2.25rem);
 }
 
 .settings__header {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .settings__title {
@@ -33,7 +31,7 @@
 .settings__primary-action {
   border: 0;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+  background: var(--gradient-primary);
   color: #fff;
   font-weight: 600;
   padding: 0.85rem 1.75rem;
@@ -54,11 +52,7 @@
 }
 
 .settings__panel {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
-  padding: 2rem;
+  padding: clamp(1.75rem, 3vw, 2.25rem);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -210,7 +204,7 @@
 
 @media (max-width: 768px) {
   .settings {
-    padding: 2rem 1.25rem;
+    padding-inline: 1.25rem;
   }
 
   .settings__header {

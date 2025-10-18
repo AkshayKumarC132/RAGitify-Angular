@@ -201,9 +201,9 @@
   flex: 1;
   background: var(--color-background);
   min-height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  display: block;
+  overflow-y: auto;
+  padding-bottom: 3rem;
 }
 
 .dashboard--sidebar-collapsed .dashboard__content {

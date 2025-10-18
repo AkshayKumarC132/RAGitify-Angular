@@ -1,15 +1,15 @@
-<section class="assistants">
-  <header class="assistants__header">
+<section class="page-shell assistants">
+  <header class="section-heading assistants__header">
     <div>
-      <h1 class="assistants__title">Assistants</h1>
-      <p class="assistants__subtitle">Configure reusable AI personas for your organisation</p>
+      <h1 class="section-heading__title assistants__title">Assistants</h1>
+      <p class="section-heading__subtitle assistants__subtitle">Configure reusable AI personas for your organisation</p>
     </div>
     <button type="button" class="assistants__primary-action" (click)="toggleCreateForm()">
       {{ showCreateForm ? 'Cancel' : 'Create Assistant' }}
     </button>
   </header>
 
-  <section class="assistants__creator" *ngIf="showCreateForm">
+  <section class="surface-card assistants__creator" *ngIf="showCreateForm">
     <form [formGroup]="createForm" (ngSubmit)="submitCreate()" class="assistants__form">
       <div class="assistants__field">
         <label for="assistant-name">Name</label>
@@ -51,7 +51,7 @@
     </form>
   </section>
 
-  <section class="assistants__panel" *ngIf="assistants.length > 0; else emptyAssistants">
+  <section class="surface-card assistants__panel" *ngIf="assistants.length > 0; else emptyAssistants">
     <div class="assistants__grid">
       <article class="assistants__card" *ngFor="let assistant of assistants">
         <header class="assistants__card-header">

@@ -1,17 +1,17 @@
-<section class="overview">
-  <header class="overview__header">
+<section class="page-shell overview">
+  <header class="section-heading overview__header">
     <div>
-      <h1 class="overview__title">Welcome back</h1>
-      <p class="overview__subtitle">Here's a snapshot of your retrieval workspace.</p>
+      <h1 class="section-heading__title overview__title">Welcome back</h1>
+      <p class="section-heading__subtitle overview__subtitle">Here's a snapshot of your retrieval workspace.</p>
     </div>
     <a class="overview__cta" routerLink="/dashboard/chat">Start a chat</a>
   </header>
 
   <section class="overview__grid">
-    <article class="overview__card">
+    <article class="surface-card overview__card">
       <header class="overview__card-header">
         <h2>Threads</h2>
-        <span class="overview__badge">{{ threads.length }}</span>
+        <span class="badge overview__badge">{{ threads.length }}</span>
       </header>
       <p class="overview__description">Keep track of every conversation your team is running.</p>
       <ul class="overview__list" *ngIf="threads.length > 0; else noThreads">
@@ -26,10 +26,10 @@
       <a class="overview__link" routerLink="/dashboard/chat">Open chat</a>
     </article>
 
-    <article class="overview__card">
+    <article class="surface-card overview__card">
       <header class="overview__card-header">
         <h2>Documents</h2>
-        <span class="overview__badge">{{ documents.length }}</span>
+        <span class="badge overview__badge">{{ documents.length }}</span>
       </header>
       <p class="overview__description">Uploaded knowledge sources available for grounding.</p>
       <ul class="overview__list" *ngIf="documents.length > 0; else noDocs">
@@ -44,10 +44,10 @@
       <a class="overview__link" routerLink="/dashboard/documents">Manage documents</a>
     </article>
 
-    <article class="overview__card">
+    <article class="surface-card overview__card">
       <header class="overview__card-header">
         <h2>Vector Stores</h2>
-        <span class="overview__badge">{{ vectorStores.length }}</span>
+        <span class="badge overview__badge">{{ vectorStores.length }}</span>
       </header>
       <p class="overview__description">Embeddings storage ready to power your retrieval.</p>
       <ul class="overview__list" *ngIf="vectorStores.length > 0; else noStores">
@@ -62,10 +62,10 @@
       <a class="overview__link" routerLink="/dashboard/vector-stores">Manage vector stores</a>
     </article>
 
-    <article class="overview__card">
+    <article class="surface-card overview__card">
       <header class="overview__card-header">
         <h2>Assistants</h2>
-        <span class="overview__badge">{{ assistants.length }}</span>
+        <span class="badge overview__badge">{{ assistants.length }}</span>
       </header>
       <p class="overview__description">Reusable personas configured for each workflow.</p>
       <ul class="overview__list" *ngIf="assistants.length > 0; else noAssistants">

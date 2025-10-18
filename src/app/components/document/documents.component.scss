@@ -4,17 +4,15 @@
 }
 
 .documents {
-  padding: 2.5rem clamp(1.5rem, 3vw, 3rem);
+  padding-inline: clamp(1.5rem, 3vw, 3rem);
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: clamp(1.5rem, 2.5vw, 2.25rem);
 }
 
 .documents__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .documents__title {
@@ -34,6 +32,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .documents__actions--form {
@@ -43,7 +42,7 @@
 .documents__primary-action {
   border: 0;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+  background: var(--gradient-primary);
   color: #fff;
   font-weight: 600;
   padding: 0.85rem 1.75rem;
@@ -58,16 +57,14 @@
 }
 
 .documents__upload {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
-  padding: 1.75rem 2rem;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
 }
 
 .documents__form {
   display: grid;
   gap: 1.25rem;
+  width: min(100%, 42rem);
+  margin: 0 auto;
 }
 
 .documents__field {
@@ -113,11 +110,7 @@
 }
 
 .documents__stat {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  padding: 1.35rem 1.5rem;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--color-border);
+  padding: clamp(1.25rem, 2vw, 1.5rem);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -134,14 +127,11 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--color-heading);
+  font-variant-numeric: tabular-nums;
 }
 
 .documents__panel {
-  background: var(--color-surface);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
-  padding: 2rem;
+  padding: clamp(1.75rem, 3vw, 2.25rem);
 }
 
 .documents__grid {
@@ -236,7 +226,7 @@
 
 @media (max-width: 768px) {
   .documents {
-    padding: 2rem 1.25rem;
+    padding-inline: 1.25rem;
   }
 
   .documents__header {

@@ -1,15 +1,15 @@
-<section class="vectors">
-  <header class="vectors__header">
+<section class="page-shell vectors">
+  <header class="section-heading vectors__header">
     <div>
-      <h1 class="vectors__title">Vector Stores</h1>
-      <p class="vectors__subtitle">Manage embeddings storage and retrieval configurations</p>
+      <h1 class="section-heading__title vectors__title">Vector Stores</h1>
+      <p class="section-heading__subtitle vectors__subtitle">Manage embeddings storage and retrieval configurations</p>
     </div>
     <button type="button" class="vectors__primary-action" (click)="toggleCreateForm()">
       {{ showCreateForm ? 'Cancel' : 'Create Vector Store' }}
     </button>
   </header>
 
-  <section class="vectors__creator" *ngIf="showCreateForm">
+  <section class="surface-card vectors__creator" *ngIf="showCreateForm">
     <form [formGroup]="createForm" (ngSubmit)="submitCreate()" class="vectors__form">
       <div class="vectors__field">
         <label for="vector-name">Name</label>
@@ -29,7 +29,7 @@
     </form>
   </section>
 
-  <section class="vectors__panel" *ngIf="vectorStores.length > 0; else emptyVectors">
+  <section class="surface-card vectors__panel" *ngIf="vectorStores.length > 0; else emptyVectors">
     <div class="vectors__grid">
       <article class="vectors__card" *ngFor="let store of vectorStores">
         <header class="vectors__card-header">

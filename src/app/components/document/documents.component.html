@@ -1,8 +1,8 @@
-<section class="documents">
-  <header class="documents__header">
+<section class="page-shell documents">
+  <header class="section-heading documents__header">
     <div>
-      <h1 class="documents__title">Documents</h1>
-      <p class="documents__subtitle">Manage your uploaded knowledge sources</p>
+      <h1 class="section-heading__title documents__title">Documents</h1>
+      <p class="section-heading__subtitle documents__subtitle">Manage your uploaded knowledge sources</p>
     </div>
     <div class="documents__actions">
       <button type="button" class="documents__primary-action" (click)="toggleUploadForm()">
@@ -11,7 +11,7 @@
     </div>
   </header>
 
-  <section class="documents__upload" *ngIf="showUploadForm">
+  <section class="surface-card documents__upload" *ngIf="showUploadForm">
     <p class="documents__help" *ngIf="vectorStores.length === 0">
       Create a vector store before ingesting documents.
     </p>
@@ -49,17 +49,17 @@
   </section>
 
   <div class="documents__overview">
-    <article class="documents__stat">
+    <article class="surface-card documents__stat">
       <span class="documents__stat-label">Total documents</span>
       <span class="documents__stat-value">{{ documents.length }}</span>
     </article>
-    <article class="documents__stat">
+    <article class="surface-card documents__stat">
       <span class="documents__stat-label">Vector stores</span>
       <span class="documents__stat-value">{{ vectorStores.length }}</span>
     </article>
   </div>
 
-  <section class="documents__panel" *ngIf="documents.length > 0; else emptyDocuments">
+  <section class="surface-card documents__panel" *ngIf="documents.length > 0; else emptyDocuments">
     <div class="documents__grid">
       <article class="documents__card" *ngFor="let doc of documents">
         <header class="documents__card-header">
