@@ -20,22 +20,30 @@
   --radius-sm: 0.65rem;
   --shadow-sm: 0 6px 18px rgba(15, 35, 95, 0.06);
   --shadow-md: 0 15px 45px rgba(15, 35, 95, 0.08);
+  --font-family-base: 'system-ui', 'Inter', 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-size-base: clamp(0.9rem, 0.84rem + 0.2vw, 0.95rem);
+  --font-size-sm: clamp(0.78rem, 0.74rem + 0.12vw, 0.85rem);
+  --font-size-lg: clamp(1.05rem, 0.98rem + 0.25vw, 1.2rem);
+  --font-size-xl: clamp(1.25rem, 1.12rem + 0.5vw, 1.75rem);
+  --line-height-base: 1.5;
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-html,
-body {
+html {
   height: 100%;
+  font-size: clamp(14px, 0.9vw + 11px, 15px);
 }
 
 body {
+  height: 100%;
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
   background: var(--color-background);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
@@ -63,14 +71,14 @@ button, input, textarea, select {
 }
 
 .page-shell {
-  --page-shell-max: 1120px;
-  --page-shell-width: clamp(75%, 90%, 100%);
+  --page-shell-max: 1080px;
+  --page-shell-width: clamp(72%, 82vw, 92%);
   width: min(var(--page-shell-max), var(--page-shell-width));
   margin: 0 auto;
-  padding-block: clamp(2rem, 3vw, 3rem);
+  padding-block: clamp(1.5rem, 2.5vw, 2.5rem);
   display: flex;
   flex-direction: column;
-  gap: clamp(1.75rem, 3vw, 2.5rem);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
@@ -115,17 +123,18 @@ button, input, textarea, select {
   gap: clamp(1rem, 2vw, 1.5rem);
 }
 
+
 .section-heading__title {
   margin: 0;
-  font-size: clamp(1.75rem, 3.5vw, 2.35rem);
-  font-weight: 700;
+  font-size: var(--font-size-xl);
+  font-weight: 600;
   color: var(--color-heading);
 }
 
 .section-heading__subtitle {
-  margin: 0.35rem 0 0;
+  margin: 0.25rem 0 0;
   color: var(--color-text-muted);
-  font-size: 0.95rem;
+  font-size: var(--font-size-sm);
 }
 
 ::-webkit-scrollbar {
