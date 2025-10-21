@@ -1,80 +1,60 @@
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-2xl">
-    <div>
-      <h2 class="text-center text-4xl font-extrabold text-gray-900 mb-2">
-        RAGitify
-      </h2>
-      <p class="text-center text-sm text-gray-600">
-        Sign in to your account
-      </p>
-    </div>
-    
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
-      <div class="space-y-4">
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-            Email address
-          </label>
-          <input
-            id="email"
-            type="email"
-            formControlName="email"
-            class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-            placeholder="Enter your email"
-            [class.border-red-500]="email?.invalid && email?.touched"
-          />
-          <p *ngIf="email?.invalid && email?.touched" class="mt-1 text-sm text-red-600">
-            Please enter a valid email address
-          </p>
-        </div>
+<section class="auth">
+  <div class="auth__card">
+    <header class="auth__card-header">
+      <h1 class="auth__brand">RAGitify</h1>
+      <p class="auth__subtitle">Sign in to your account</p>
+    </header>
 
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            formControlName="password"
-            class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-            placeholder="Enter your password"
-            [class.border-red-500]="password?.invalid && password?.touched"
-          />
-          <p *ngIf="password?.invalid && password?.touched" class="mt-1 text-sm text-red-600">
-            Password must be at least 6 characters
-          </p>
-        </div>
-      </div>
-
-      <div *ngIf="errorMessage" class="rounded-lg bg-red-50 p-4">
-        <p class="text-sm text-red-800">{{ errorMessage }}</p>
-      </div>
-
-      <div>
-        <button
-          type="submit"
-          [disabled]="loginForm.invalid || isLoading"
-          class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-        >
-          <span *ngIf="!isLoading">Sign in</span>
-          <span *ngIf="isLoading" class="flex items-center">
-            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Signing in...
-          </span>
-        </button>
-      </div>
-
-      <div class="text-center">
-        <p class="text-sm text-gray-600">
-          Don't have an account?
-          <a routerLink="/register" class="font-medium text-indigo-600 hover:text-indigo-500 transition-colors">
-            Sign up
-          </a>
+    <form class="auth__form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="auth__field-group">
+        <label class="auth__label" for="email">Email address</label>
+        <input
+          class="auth__input"
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          [class.auth__input--invalid]="email?.invalid && email?.touched"
+        />
+        <p *ngIf="email?.invalid && email?.touched" class="auth__error">
+          Please enter a valid email address
         </p>
       </div>
+
+      <div class="auth__field-group">
+        <label class="auth__label" for="password">Password</label>
+        <input
+          class="auth__input"
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Enter your password"
+          [class.auth__input--invalid]="password?.invalid && password?.touched"
+        />
+        <p *ngIf="password?.invalid && password?.touched" class="auth__error">
+          Password must be at least 6 characters
+        </p>
+      </div>
+
+      <div *ngIf="errorMessage" class="auth__alert auth__alert--error">
+        <p>{{ errorMessage }}</p>
+      </div>
+
+      <button class="auth__submit" type="submit" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Sign in</span>
+        <span *ngIf="isLoading" class="auth__loading">
+          <svg class="auth__spinner" viewBox="0 0 50 50">
+            <circle class="auth__spinner-track" cx="25" cy="25" r="20"></circle>
+            <circle class="auth__spinner-indicator" cx="25" cy="25" r="20"></circle>
+          </svg>
+          Signing in...
+        </span>
+      </button>
+
+      <p class="auth__helper-text">
+        Don't have an account?
+        <a class="auth__link" routerLink="/register">Sign up</a>
+      </p>
     </form>
   </div>
-</div>
+</section>

@@ -1,0 +1,83 @@
+<section class="page-shell overview">
+  <header class="section-heading overview__header">
+    <div>
+      <h1 class="section-heading__title overview__title">Welcome back</h1>
+      <p class="section-heading__subtitle overview__subtitle">Here's a snapshot of your retrieval workspace.</p>
+    </div>
+    <a class="overview__cta" routerLink="/dashboard/chat">Start a chat</a>
+  </header>
+
+  <section class="overview__grid">
+    <article class="surface-card overview__card">
+      <header class="overview__card-header">
+        <h2>Threads</h2>
+        <span class="badge overview__badge">{{ threads.length }}</span>
+      </header>
+      <p class="overview__description">Keep track of every conversation your team is running.</p>
+      <ul class="overview__list" *ngIf="threads.length > 0; else noThreads">
+        <li *ngFor="let thread of threads | slice:0:3">
+          <span class="overview__list-title">{{ thread.title || 'Untitled thread' }}</span>
+          <span class="overview__list-meta">{{ thread.created_at | date:'short' }}</span>
+        </li>
+      </ul>
+      <ng-template #noThreads>
+        <p class="overview__empty">No threads yet.</p>
+      </ng-template>
+      <a class="overview__link" routerLink="/dashboard/chat">Open chat</a>
+    </article>
+
+    <article class="surface-card overview__card">
+      <header class="overview__card-header">
+        <h2>Documents</h2>
+        <span class="badge overview__badge">{{ documents.length }}</span>
+      </header>
+      <p class="overview__description">Uploaded knowledge sources available for grounding.</p>
+      <ul class="overview__list" *ngIf="documents.length > 0; else noDocs">
+        <li *ngFor="let document of documents | slice:0:3">
+          <span class="overview__list-title">{{ document.title }}</span>
+          <span class="overview__list-meta">{{ document.status | titlecase }}</span>
+        </li>
+      </ul>
+      <ng-template #noDocs>
+        <p class="overview__empty">Upload your first document.</p>
+      </ng-template>
+      <a class="overview__link" routerLink="/dashboard/documents">Manage documents</a>
+    </article>
+
+    <article class="surface-card overview__card">
+      <header class="overview__card-header">
+        <h2>Vector Stores</h2>
+        <span class="badge overview__badge">{{ vectorStores.length }}</span>
+      </header>
+      <p class="overview__description">Embeddings storage ready to power your retrieval.</p>
+      <ul class="overview__list" *ngIf="vectorStores.length > 0; else noStores">
+        <li *ngFor="let store of vectorStores | slice:0:3">
+          <span class="overview__list-title">{{ store.name }}</span>
+          <span class="overview__list-meta">{{ store.created_at | date:'mediumDate' }}</span>
+        </li>
+      </ul>
+      <ng-template #noStores>
+        <p class="overview__empty">Create a vector store to begin.</p>
+      </ng-template>
+      <a class="overview__link" routerLink="/dashboard/vector-stores">Manage vector stores</a>
+    </article>
+
+    <article class="surface-card overview__card">
+      <header class="overview__card-header">
+        <h2>Assistants</h2>
+        <span class="badge overview__badge">{{ assistants.length }}</span>
+      </header>
+      <p class="overview__description">Reusable personas configured for each workflow.</p>
+      <ul class="overview__list" *ngIf="assistants.length > 0; else noAssistants">
+        <li *ngFor="let assistant of assistants | slice:0:3">
+          <span class="overview__list-title">{{ assistant.name }}</span>
+          <span class="overview__list-meta">{{ assistant.model || 'Default model' }}</span>
+        </li>
+      </ul>
+      <ng-template #noAssistants>
+        <p class="overview__empty">Create an assistant to streamline chat.</p>
+      </ng-template>
+      <a class="overview__link" routerLink="/dashboard/assistants">Manage assistants</a>
+    </article>
+  </section>
+</section>

@@ -1,0 +1,232 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.settings {
+  padding-inline: clamp(1.25rem, 2.5vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 2.5vw, 2.25rem);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.settings__header {
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.settings__title {
+  margin: 0;
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.settings__subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.settings__primary-action {
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-primary);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.settings__primary-action:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 36px rgba(99, 102, 241, 0.25);
+}
+
+.settings__layout {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 1.5rem;
+}
+
+.settings__panel {
+  padding: clamp(1.4rem, 2.5vw, 2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.settings__panel--accent {
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.98), rgba(241, 245, 255, 0.94));
+}
+
+.settings__panel-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.settings__panel-header p {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.settings__empty {
+  border: 1px dashed rgba(99, 102, 241, 0.35);
+  border-radius: var(--radius-md);
+  padding: 1.6rem;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.settings__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.settings__list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.1rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-sm);
+}
+
+.settings__list-item h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-heading);
+}
+
+.settings__list-item p {
+  margin: 0.25rem 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.settings__tags {
+  display: inline-flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.settings__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.settings__tag--danger {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.settings__tag--accent {
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--color-primary);
+}
+
+.settings__actions {
+  display: inline-flex;
+  gap: 0.75rem;
+}
+
+.settings__actions button {
+  border: 0;
+  background: transparent;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.settings__actions button:hover {
+  color: var(--color-primary-dark);
+}
+
+.settings__danger {
+  color: var(--color-danger);
+}
+
+.settings__danger:hover {
+  color: #b71c1c;
+}
+
+.settings__details {
+  margin: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.settings__details div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.settings__details dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.settings__details dd {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--color-heading);
+}
+
+@media (max-width: 992px) {
+  .settings__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .settings {
+    padding-inline: 1.25rem;
+  }
+
+  .settings__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .settings__primary-action {
+    width: 100%;
+  }
+
+  .settings__list-item {
+    flex-direction: column;
+  }
+
+  .settings__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

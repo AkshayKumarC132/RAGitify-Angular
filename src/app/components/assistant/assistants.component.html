@@ -1,0 +1,78 @@
+<section class="page-shell assistants">
+  <header class="section-heading assistants__header">
+    <div>
+      <h1 class="section-heading__title assistants__title">Assistants</h1>
+      <p class="section-heading__subtitle assistants__subtitle">Configure reusable AI personas for your organisation</p>
+    </div>
+    <button type="button" class="assistants__primary-action" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Cancel' : 'Create Assistant' }}
+    </button>
+  </header>
+
+  <section class="surface-card assistants__creator" *ngIf="showCreateForm">
+    <form [formGroup]="createForm" (ngSubmit)="submitCreate()" class="assistants__form">
+      <div class="assistants__field">
+        <label for="assistant-name">Name</label>
+        <input id="assistant-name" type="text" formControlName="name" placeholder="Customer support agent" />
+        <span class="assistants__error" *ngIf="createForm.get('name')?.invalid && createForm.get('name')?.touched">
+          Provide a descriptive name (minimum 3 characters).
+        </span>
+      </div>
+
+      <div class="assistants__field">
+        <label for="assistant-vector">Vector store</label>
+        <select id="assistant-vector" formControlName="vector_store_id">
+          <option value="" disabled>Select a vector store</option>
+          <option *ngFor="let store of vectorStores" [value]="store.id">{{ store.name }}</option>
+        </select>
+        <span class="assistants__error" *ngIf="createForm.get('vector_store_id')?.invalid && createForm.get('vector_store_id')?.touched">
+          Choose the vector store this assistant should query.
+        </span>
+      </div>
+
+      <div class="assistants__field">
+        <label for="assistant-model">Model</label>
+        <input id="assistant-model" type="text" formControlName="model" placeholder="gpt-4o-mini" />
+      </div>
+
+      <div class="assistants__field">
+        <label for="assistant-instructions">Instructions</label>
+        <textarea id="assistant-instructions" formControlName="instructions" rows="4" placeholder="Set the assistant tone and operating procedure."></textarea>
+      </div>
+
+      <div class="assistants__actions">
+        <button type="submit" class="assistants__primary-action" [disabled]="isCreating || vectorStores.length === 0">
+          {{ isCreating ? 'Creating…' : 'Save assistant' }}
+        </button>
+      </div>
+
+      <p class="assistants__error" *ngIf="createError" aria-live="assertive">{{ createError }}</p>
+      <p class="assistants__help" *ngIf="vectorStores.length === 0">Create a vector store before configuring an assistant.</p>
+    </form>
+  </section>
+
+  <section class="surface-card assistants__panel" *ngIf="assistants.length > 0; else emptyAssistants">
+    <div class="assistants__grid">
+      <article class="assistants__card" *ngFor="let assistant of assistants">
+        <header class="assistants__card-header">
+          <div>
+            <h2 class="assistants__card-title">{{ assistant.name }}</h2>
+            <p class="assistants__card-meta">Model: {{ assistant.model || 'Default' }}</p>
+          </div>
+          <span class="assistants__badge">{{ assistant.created_at | date:'mediumDate' }}</span>
+        </header>
+        <p class="assistants__description">
+          {{ assistant.instructions || 'No instructions provided yet.' }}
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <ng-template #emptyAssistants>
+    <div class="assistants__empty">
+      <div class="assistants__empty-icon"></div>
+      <h2>No assistants yet</h2>
+      <p>Create a dedicated assistant to streamline your RAG experiences.</p>
+    </div>
+  </ng-template>
+</section>

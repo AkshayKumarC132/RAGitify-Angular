@@ -1,0 +1,60 @@
+<section class="page-shell vectors">
+  <header class="section-heading vectors__header">
+    <div>
+      <h1 class="section-heading__title vectors__title">Vector Stores</h1>
+      <p class="section-heading__subtitle vectors__subtitle">Manage embeddings storage and retrieval configurations</p>
+    </div>
+    <button type="button" class="vectors__primary-action" (click)="toggleCreateForm()">
+      {{ showCreateForm ? 'Cancel' : 'Create Vector Store' }}
+    </button>
+  </header>
+
+  <section class="surface-card vectors__creator" *ngIf="showCreateForm">
+    <form [formGroup]="createForm" (ngSubmit)="submitCreate()" class="vectors__form">
+      <div class="vectors__field">
+        <label for="vector-name">Name</label>
+        <input id="vector-name" type="text" formControlName="name" placeholder="Customer knowledge base" />
+        <span class="vectors__error" *ngIf="createForm.get('name')?.invalid && createForm.get('name')?.touched">
+          Provide a descriptive name (minimum 3 characters).
+        </span>
+      </div>
+
+      <div class="vectors__actions">
+        <button type="submit" class="vectors__primary-action" [disabled]="isCreating">
+          {{ isCreating ? 'Creating…' : 'Save vector store' }}
+        </button>
+      </div>
+
+      <p class="vectors__error" *ngIf="createError" aria-live="assertive">{{ createError }}</p>
+    </form>
+  </section>
+
+  <section class="surface-card vectors__panel" *ngIf="vectorStores.length > 0; else emptyVectors">
+    <div class="vectors__grid">
+      <article class="vectors__card" *ngFor="let store of vectorStores">
+        <header class="vectors__card-header">
+          <h2 class="vectors__card-title">{{ store.name }}</h2>
+          <span class="vectors__badge">{{ store.user }}</span>
+        </header>
+        <dl class="vectors__meta">
+          <div>
+            <dt>Identifier</dt>
+            <dd>{{ store.id }}</dd>
+          </div>
+          <div>
+            <dt>Created</dt>
+            <dd>{{ store.created_at | date:'medium' }}</dd>
+          </div>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <ng-template #emptyVectors>
+    <div class="vectors__empty">
+      <div class="vectors__empty-icon"></div>
+      <h2>No vector stores yet</h2>
+      <p>Spin up your first vector store to unlock document-grounded chat experiences.</p>
+    </div>
+  </ng-template>
+</section>

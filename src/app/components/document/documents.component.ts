@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DocumentService } from '../../services/document.service';
 import { VectorStoreService } from '../../services/vector-store.service';
 import { Document } from '../../models/document.model';
@@ -8,49 +9,29 @@ import { VectorStore } from '../../models/vector-store.model';
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [CommonModule],
-  template: `
-    <div class="h-full overflow-y-auto p-6">
-      <div class="max-w-7xl mx-auto">
-        <div class="mb-6">
-          <h1 class="text-3xl font-bold text-gray-900">Documents</h1>
-          <p class="text-gray-600 mt-2">Manage your uploaded documents</p>
-        </div>
-
-        <div class="bg-white rounded-lg shadow p-6">
-          <div class="mb-6">
-            <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
-              Upload Document
-            </button>
-          </div>
-
-          <div *ngIf="documents.length === 0" class="text-center py-12 text-gray-500">
-            <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            <p class="text-lg">No documents yet</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div *ngFor="let doc of documents" class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-              <h3 class="font-semibold text-gray-900 mb-2">{{ doc.title }}</h3>
-              <p class="text-sm text-gray-500 mb-2">Status: {{ doc.status }}</p>
-              <p class="text-xs text-gray-400">{{ doc.uploaded_at | date:'short' }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './documents.component.html',
+  styleUrls: ['./documents.component.scss']
 })
 export class DocumentsComponent implements OnInit {
   documents: Document[] = [];
   vectorStores: VectorStore[] = [];
+  uploadForm: FormGroup;
+  showUploadForm = false;
+  uploadError = '';
+  isUploading = false;
+  selectedFile: File | null = null;
 
   constructor(
     private documentService: DocumentService,
-    private vectorStoreService: VectorStoreService
-  ) {}
+    private vectorStoreService: VectorStoreService,
+    private fb: FormBuilder
+  ) {
+    this.uploadForm = this.fb.group({
+      vector_store_id: ['', Validators.required],
+      s3_file_url: ['']
+    });
+  }
 
   ngOnInit(): void {
     this.loadDocuments();
@@ -59,15 +40,78 @@ export class DocumentsComponent implements OnInit {
 
   loadDocuments(): void {
     this.documentService.list().subscribe({
-      next: (docs) => this.documents = docs,
+      next: (docs) => (this.documents = docs),
       error: (error) => console.error('Error loading documents:', error)
     });
   }
 
   loadVectorStores(): void {
     this.vectorStoreService.list().subscribe({
-      next: (stores) => this.vectorStores = stores,
+      next: (stores) => (this.vectorStores = stores),
       error: (error) => console.error('Error loading vector stores:', error)
     });
+  }
+
+  toggleUploadForm(): void {
+    this.showUploadForm = !this.showUploadForm;
+    this.uploadError = '';
+    if (!this.showUploadForm) {
+      this.resetUploadForm();
+    }
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+    } else {
+      this.selectedFile = null;
+    }
+  }
+
+  submitUpload(): void {
+    if (this.uploadForm.invalid) {
+      this.uploadForm.markAllAsTouched();
+      return;
+    }
+
+    const vectorStoreId = this.uploadForm.get('vector_store_id')?.value;
+    const s3Url = (this.uploadForm.get('s3_file_url')?.value || '').trim();
+
+    if (!this.selectedFile && !s3Url) {
+      this.uploadError = 'Choose a file or provide an S3 URL to ingest.';
+      return;
+    }
+
+    const payload: any = {
+      vector_store_id: vectorStoreId
+    };
+
+    if (this.selectedFile) {
+      payload.file = this.selectedFile;
+    } else {
+      payload.s3_file_url = s3Url;
+    }
+
+    this.isUploading = true;
+    this.uploadError = '';
+
+    this.documentService.ingest(payload).subscribe({
+      next: () => {
+        this.isUploading = false;
+        this.toggleUploadForm();
+        this.resetUploadForm();
+        this.loadDocuments();
+      },
+      error: (error) => {
+        this.isUploading = false;
+        this.uploadError = error?.error?.detail || 'Unable to upload document.';
+      }
+    });
+  }
+
+  private resetUploadForm(): void {
+    this.uploadForm.reset();
+    this.selectedFile = null;
   }
 }

@@ -9,6 +9,10 @@ import { RunService } from '../../services/run.service';
 import { Thread } from '../../models/thread.model';
 import { Message } from '../../models/message.model';
 import { Assistant } from '../../models/assistant.model';
+import { VectorStoreService } from '../../services/vector-store.service';
+import { VectorStore } from '../../models/vector-store.model';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat',
@@ -25,6 +29,10 @@ export class ChatComponent implements OnInit {
   messages: Message[] = [];
   assistants: Assistant[] = [];
   selectedAssistant: Assistant | null = null;
+  vectorStores: VectorStore[] = [];
+  selectedVectorStore: VectorStore | null = null;
+  threadError = '';
+  isCreatingThread = false;
   
   messageForm: FormGroup;
   isLoading = false;
@@ -35,7 +43,8 @@ export class ChatComponent implements OnInit {
     private threadService: ThreadService,
     private messageService: MessageService,
     private assistantService: AssistantService,
-    private runService: RunService
+    private runService: RunService,
+    private vectorStoreService: VectorStoreService
   ) {
     this.messageForm = this.fb.group({
       content: ['', Validators.required]
@@ -45,15 +54,13 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {
     this.loadThreads();
     this.loadAssistants();
+    this.loadVectorStores();
   }
 
   loadThreads(): void {
     this.threadService.list().subscribe({
       next: (threads) => {
         this.threads = threads;
-        if (threads.length > 0 && !this.currentThread) {
-          this.selectThread(threads[0]);
-        }
       },
       error: (error) => console.error('Error loading threads:', error)
     });
@@ -71,8 +78,34 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  loadVectorStores(): void {
+    this.vectorStoreService.list().subscribe({
+      next: (stores) => {
+        this.vectorStores = stores;
+        if (this.currentThread?.vector_store_id_read) {
+          const active = stores.find(store => store.id === this.currentThread?.vector_store_id_read);
+          if (active) {
+            this.selectedVectorStore = active;
+          }
+        }
+
+        if (stores.length > 0 && !this.selectedVectorStore) {
+          this.selectedVectorStore = stores[0];
+        }
+      },
+      error: (error) => console.error('Error loading vector stores:', error)
+    });
+  }
+
   selectThread(thread: Thread): void {
     this.currentThread = thread;
+    this.threadError = '';
+    if (thread.vector_store_id_read) {
+      const matchingStore = this.vectorStores.find(store => store.id === thread.vector_store_id_read);
+      if (matchingStore) {
+        this.selectedVectorStore = matchingStore;
+      }
+    }
     this.loadMessages(thread.id);
   }
 
@@ -92,30 +125,46 @@ export class ChatComponent implements OnInit {
   }
 
   createNewThread(): void {
-    const title = `Chat ${new Date().toLocaleString()}`;
-    // You need to provide a vector_store_id, for now we'll handle it differently
-    // This is a simplified version
-    alert('Please create a thread with a vector store ID from the Vector Stores page');
+    this.currentThread = null;
+    this.messages = [];
+    this.threadError = '';
+    this.messageForm.reset();
   }
 
   sendMessage(): void {
-    if (this.messageForm.valid && this.currentThread) {
-      const content = this.messageForm.get('content')?.value;
-      this.isSending = true;
+    if (this.messageForm.invalid || this.isSending) {
+      return;
+    }
 
-      const messageData = {
-        thread_id: this.currentThread.id,
-        role: 'user' as const,
-        content: content
-      };
+    const rawContent = this.messageForm.get('content')?.value;
+    const content = typeof rawContent === 'string' ? rawContent.trim() : '';
 
-      this.messageService.create(messageData).subscribe({
+    if (!content) {
+      this.messageForm.get('content')?.setValue('');
+      return;
+    }
+
+    this.isSending = true;
+    this.threadError = '';
+
+    this.ensureActiveThread(content)
+      .pipe(
+        switchMap((thread) => {
+          const messageData = {
+            thread_id: thread.id,
+            role: 'user' as const,
+            content
+          };
+
+          return this.messageService.create(messageData);
+        })
+      )
+      .subscribe({
         next: (message) => {
           this.messages.push(message);
           this.messageForm.reset();
           this.scrollToBottom();
-          
-          // Create a run to get assistant response
+
           if (this.selectedAssistant) {
             this.createRun();
           } else {
@@ -127,7 +176,47 @@ export class ChatComponent implements OnInit {
           this.isSending = false;
         }
       });
+  }
+
+  private ensureActiveThread(initialMessage: string): Observable<Thread> {
+    if (this.currentThread) {
+      return of(this.currentThread);
     }
+
+    if (!this.selectedVectorStore) {
+      this.threadError = 'Select a vector store to start a new conversation.';
+      return throwError(() => new Error('Vector store required'));
+    }
+
+    const title = this.buildThreadTitle(initialMessage);
+    const payload = {
+      title,
+      vector_store_id: this.selectedVectorStore.id
+    } as const;
+
+    this.isCreatingThread = true;
+
+    return this.threadService.create(payload).pipe(
+      tap((thread) => {
+        this.currentThread = thread;
+        this.threads = [thread, ...this.threads];
+        this.isCreatingThread = false;
+      }),
+      catchError((error) => {
+        this.isCreatingThread = false;
+        this.threadError = error?.error?.detail || 'Unable to create thread. Please try again.';
+        return throwError(() => error);
+      })
+    );
+  }
+
+  private buildThreadTitle(content: string): string {
+    const normalized = content.replace(/\s+/g, ' ').trim();
+    if (!normalized) {
+      return `Chat ${new Date().toLocaleString()}`;
+    }
+
+    return normalized.length > 60 ? `${normalized.slice(0, 57)}...` : normalized;
   }
 
   createRun(): void {

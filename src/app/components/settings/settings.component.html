@@ -1,0 +1,58 @@
+<section class="page-shell settings">
+  <header class="section-heading settings__header">
+    <div>
+      <h1 class="section-heading__title settings__title">Settings</h1>
+      <p class="section-heading__subtitle settings__subtitle">Manage your API keys, security preferences and account information</p>
+    </div>
+    <button type="button" class="settings__primary-action">Add API Key</button>
+  </header>
+
+  <div class="settings__layout">
+    <section class="surface-card settings__panel">
+      <header class="settings__panel-header">
+        <h2>API Keys</h2>
+        <p>Configure access to model providers and deployment targets.</p>
+      </header>
+
+      <div *ngIf="apiKeys.length === 0" class="settings__empty">
+        <p>No API keys configured.</p>
+      </div>
+
+      <ul class="settings__list" *ngIf="apiKeys.length > 0">
+        <li class="settings__list-item" *ngFor="let key of apiKeys">
+          <div>
+            <h3>{{ key.name }}</h3>
+            <p>Provider: {{ key.provider }} · Model: {{ key.model }}</p>
+            <div class="settings__tags">
+              <span class="settings__tag" [class.settings__tag--danger]="!key.is_valid">
+                {{ key.is_valid ? 'Valid' : 'Invalid' }}
+              </span>
+              <span class="settings__tag settings__tag--accent" *ngIf="key.is_active">Active</span>
+            </div>
+          </div>
+          <div class="settings__actions">
+            <button type="button">Edit</button>
+            <button type="button" class="settings__danger">Delete</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="surface-card settings__panel settings__panel--accent">
+      <header class="settings__panel-header">
+        <h2>Account</h2>
+        <p>Details linked to your RAGitify workspace.</p>
+      </header>
+      <dl class="settings__details">
+        <div>
+          <dt>Email</dt>
+          <dd>{{ user?.email || 'N/A' }}</dd>
+        </div>
+        <div>
+          <dt>Tenant</dt>
+          <dd>{{ user?.tenant?.name || 'N/A' }}</dd>
+        </div>
+      </dl>
+    </section>
+  </div>
+</section>

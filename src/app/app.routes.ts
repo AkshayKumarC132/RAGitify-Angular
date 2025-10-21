@@ -8,6 +8,7 @@ import { VectorStoresComponent } from './components/document/vector-stores.compo
 import { AssistantsComponent } from './components/assistant/assistants.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { authGuard } from './guards/auth.guard';
+import { DashboardHomeComponent } from './components/dashboard/dashboard-home.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -18,7 +19,8 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'chat', pathMatch: 'full' },
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      { path: 'overview', component: DashboardHomeComponent },
       { path: 'chat', component: ChatComponent },
       { path: 'documents', component: DocumentsComponent },
       { path: 'vector-stores', component: VectorStoresComponent },
