@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Run, RunCreate, SubmitToolOutputs } from '../models/run.model';
+import { Run, RunCreate, RunListParams, SubmitToolOutputs } from '../models/run.model';
+import { ApiMessageResponse } from '../models/api.model';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -25,9 +26,13 @@ export class RunService {
     return this.http.post<Run>(`${this.apiUrl}/run/${token}/`, data);
   }
 
-  list(): Observable<Run[]> {
+  list(params?: RunListParams): Observable<Run[]> {
     const token = this.getToken();
-    return this.http.get<Run[]>(`${this.apiUrl}/run/${token}/list/`);
+    let httpParams = new HttpParams();
+    if (params?.thread_id) {
+      httpParams = httpParams.set('thread_id', params.thread_id);
+    }
+    return this.http.get<Run[]>(`${this.apiUrl}/run/${token}/list/`, { params: httpParams });
   }
 
   get(id: string): Observable<Run> {
@@ -35,19 +40,19 @@ export class RunService {
     return this.http.get<Run>(`${this.apiUrl}/run/${token}/${id}/`);
   }
 
-  cancel(runId: string): Observable<Run> {
+  cancel(runId: string): Observable<ApiMessageResponse> {
     const token = this.getToken();
-    return this.http.post<Run>(`${this.apiUrl}/run/${token}/${runId}/cancel/`, {});
+    return this.http.post<ApiMessageResponse>(`${this.apiUrl}/run/${token}/${runId}/cancel/`, {});
   }
 
-  rerun(runId: string): Observable<Run> {
+  rerun(runId: string, overrides?: Partial<RunCreate>): Observable<Run> {
     const token = this.getToken();
-    return this.http.post<Run>(`${this.apiUrl}/run/${token}/${runId}/rerun/`, {});
+    return this.http.post<Run>(`${this.apiUrl}/run/${token}/${runId}/rerun/`, overrides || {});
   }
 
-  submitToolOutputs(runId: string, data: SubmitToolOutputs): Observable<Run> {
+  submitToolOutputs(runId: string, data: SubmitToolOutputs): Observable<ApiMessageResponse> {
     const token = this.getToken();
-    return this.http.post<Run>(`${this.apiUrl}/run/${token}/${runId}/submit-tool-outputs/`, data);
+    return this.http.post<ApiMessageResponse>(`${this.apiUrl}/run/${token}/${runId}/submit-tool-outputs/`, data);
   }
 
   update(id: string, data: Partial<RunCreate>): Observable<Run> {

@@ -2,10 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { 
-  DocumentAccess, 
-  DocumentAccessCreate, 
-  DocumentAccessRemove 
+import {
+  DocumentAccess,
+  DocumentAccessRequest,
+  DocumentAccessResponse,
+  DocumentAccessRemoveRequest,
+  DocumentAccessRemoveResponse
 } from '../models/document-access.model';
 import { AuthService } from './auth.service';
 
@@ -24,9 +26,9 @@ export class DocumentAccessService {
     return this.authService.getToken() || '';
   }
 
-  create(data: DocumentAccessCreate): Observable<DocumentAccess> {
+  create(data: DocumentAccessRequest): Observable<DocumentAccessResponse> {
     const token = this.getToken();
-    return this.http.post<DocumentAccess>(`${this.apiUrl}/document-access/${token}/`, data);
+    return this.http.post<DocumentAccessResponse>(`${this.apiUrl}/document-access/${token}/`, data);
   }
 
   list(): Observable<DocumentAccess[]> {
@@ -39,11 +41,9 @@ export class DocumentAccessService {
     return this.http.get<DocumentAccess>(`${this.apiUrl}/document-access/${token}/${id}/`);
   }
 
-  remove(data: DocumentAccessRemove): Observable<void> {
+  remove(data: DocumentAccessRemoveRequest): Observable<DocumentAccessRemoveResponse> {
     const token = this.getToken();
-    return this.http.request<void>('delete', `${this.apiUrl}/document-access/remove/${token}/`, {
-      body: data
-    });
+    return this.http.put<DocumentAccessRemoveResponse>(`${this.apiUrl}/document-access/remove/${token}/`, data);
   }
 
   delete(id: number): Observable<void> {

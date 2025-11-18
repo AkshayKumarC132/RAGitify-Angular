@@ -1,22 +1,36 @@
+import { VectorStore } from './vector-store.model';
+
+export type DocumentStatusValue = 'pending' | 'processing' | 'completed' | 'failed';
+
 export interface Document {
   id: string;
   title: string;
-  vector_store: VectorStore;
-  user: string;
-  uploaded_at: string;
-  status: 'pending' | 'processing' | 'completed' | 'failed';
+  status: DocumentStatusValue;
+  vector_store?: VectorStore | string;
+  vector_store_id?: string;
+  description?: string;
+  file_name?: string;
+  file_size?: number;
+  uploaded_at?: string;
+  created_at?: string;
+  updated_at?: string;
+  qdrant_points?: number;
+  metadata?: Record<string, any>;
 }
 
 export interface IngestDocumentRequest {
+  vector_store_id: string;
+  title?: string;
   file?: File;
   s3_file_url?: string;
-  vector_store_id: string;
 }
 
-export interface DocumentStatus {
-  id: string;
+export interface DocumentStatusResponse {
+  document_id: string;
   status: string;
-  message?: string;
+  qdrant_points: number;
 }
 
-import { VectorStore } from './vector-store.model';
+export interface DocumentListFilters {
+  vector_store_id?: string;
+}

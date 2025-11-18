@@ -1,17 +1,21 @@
 export interface OpenAIKey {
-  id: string;
+  id: number;
+  name?: string;
+  provider: string;
   api_key?: string;
-  name: string;
-  model: string;
-  provider: 'OpenAI' | 'Ollama';
-  is_valid: boolean;
+  model?: string;
+  region?: string;
+  is_valid?: boolean;
   is_active: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface OpenAIKeyCreate {
+  provider: string;
   api_key: string;
-  name: string;
+  name?: string;
   model?: string;
-  provider: 'OpenAI' | 'Ollama';
+  region?: string;
   is_active?: boolean;
 }

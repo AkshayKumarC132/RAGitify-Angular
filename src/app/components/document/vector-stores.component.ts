@@ -31,8 +31,10 @@ import { VectorStore } from '../../models/vector-store.model';
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div *ngFor="let store of vectorStores" class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-              <h3 class="font-semibold text-gray-900 mb-2">{{ store.name }}</h3>
-              <p class="text-sm text-gray-500 mb-2">User: {{ store.user }}</p>
+              <h3 class="font-semibold text-gray-900 mb-1">{{ store.name }}</h3>
+              <p class="text-sm text-gray-500">Provider: {{ store.provider }}</p>
+              <p class="text-sm text-gray-500" *ngIf="store.model">Model: {{ store.model }}</p>
+              <p class="text-xs text-gray-400" *ngIf="store.description">{{ store.description }}</p>
               <p class="text-xs text-gray-400">Created: {{ store.created_at | date:'short' }}</p>
             </div>
           </div>
