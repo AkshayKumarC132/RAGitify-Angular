@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { 
-  User, 
-  LoginRequest, 
-  LoginResponse, 
-  RegisterRequest 
+import {
+  User,
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  ProtectedResponse
 } from '../models/user.model';
+import { ApiMessageResponse } from '../models/api.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +24,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  register(data: RegisterRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register/`, data);
+  register(data: RegisterRequest): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/register/`, data);
   }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
@@ -39,9 +41,9 @@ export class AuthService {
       );
   }
 
-  logout(): Observable<any> {
+  logout(): Observable<ApiMessageResponse> {
     const token = this.getToken();
-    return this.http.post(`${this.apiUrl}/logout/${token}/`, {})
+    return this.http.post<ApiMessageResponse>(`${this.apiUrl}/logout/${token}/`, {})
       .pipe(
         tap(() => {
           this.clearAuth();
@@ -49,9 +51,9 @@ export class AuthService {
       );
   }
 
-  protected(): Observable<any> {
+  protected(): Observable<ProtectedResponse> {
     const token = this.getToken();
-    return this.http.get(`${this.apiUrl}/protected/${token}/`);
+    return this.http.get<ProtectedResponse>(`${this.apiUrl}/protected/${token}/`);
   }
 
   getToken(): string | null {

@@ -12,19 +12,19 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-8 space-y-6">
       <div class="space-y-4">
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-            Email address
+          <label for="identifier" class="block text-sm font-medium text-gray-700 mb-1">
+            Email or Username
           </label>
           <input
-            id="email"
-            type="email"
-            formControlName="email"
+            id="identifier"
+            type="text"
+            formControlName="identifier"
             class="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-            placeholder="Enter your email"
-            [class.border-red-500]="email?.invalid && email?.touched"
+            placeholder="Enter your email or username"
+            [class.border-red-500]="identifier?.invalid && identifier?.touched"
           />
-          <p *ngIf="email?.invalid && email?.touched" class="mt-1 text-sm text-red-600">
-            Please enter a valid email address
+          <p *ngIf="identifier?.invalid && identifier?.touched" class="mt-1 text-sm text-red-600">
+            This field is required
           </p>
         </div>
 

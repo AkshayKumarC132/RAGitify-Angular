@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { LoginRequest } from '../../models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +23,7 @@ export class LoginComponent {
     private router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      identifier: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
@@ -32,7 +33,23 @@ export class LoginComponent {
       this.isLoading = true;
       this.errorMessage = '';
 
-      this.authService.login(this.loginForm.value).subscribe({
+      const identifier: string = (this.loginForm.get('identifier')?.value || '').trim();
+      const password: string = this.loginForm.get('password')?.value;
+
+      if (!identifier) {
+        this.isLoading = false;
+        this.errorMessage = 'Please enter your email or username.';
+        return;
+      }
+
+      const credentials: LoginRequest = { password };
+      if (identifier.includes('@')) {
+        credentials.email = identifier;
+      } else {
+        credentials.username = identifier;
+      }
+
+      this.authService.login(credentials).subscribe({
         next: (response) => {
           this.isLoading = false;
           this.router.navigate(['/dashboard']);
@@ -45,6 +62,6 @@ export class LoginComponent {
     }
   }
 
-  get email() { return this.loginForm.get('email'); }
+  get identifier() { return this.loginForm.get('identifier'); }
   get password() { return this.loginForm.get('password'); }
 }

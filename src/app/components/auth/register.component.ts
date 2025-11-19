@@ -25,6 +25,7 @@ export class RegisterComponent {
     this.registerForm = this.fb.group({
       first_name: [''],
       last_name: [''],
+      username: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       tenant_name: ['', [Validators.required]],
@@ -57,4 +58,5 @@ export class RegisterComponent {
   get email() { return this.registerForm.get('email'); }
   get password() { return this.registerForm.get('password'); }
   get tenant_name() { return this.registerForm.get('tenant_name'); }
+  get username() { return this.registerForm.get('username'); }
 }

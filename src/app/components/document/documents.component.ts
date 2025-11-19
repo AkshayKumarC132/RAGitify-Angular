@@ -33,9 +33,17 @@ import { VectorStore } from '../../models/vector-store.model';
 
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div *ngFor="let doc of documents" class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-              <h3 class="font-semibold text-gray-900 mb-2">{{ doc.title }}</h3>
-              <p class="text-sm text-gray-500 mb-2">Status: {{ doc.status }}</p>
-              <p class="text-xs text-gray-400">{{ doc.uploaded_at | date:'short' }}</p>
+              <h3 class="font-semibold text-gray-900 mb-1">{{ doc.title }}</h3>
+              <p class="text-sm text-gray-500">Status: {{ doc.status }}</p>
+              <p class="text-sm text-gray-500" *ngIf="doc.vector_store_id || doc.vector_store">
+                Vector Store: {{ getVectorStoreLabel(doc) }}
+              </p>
+              <p class="text-xs text-gray-400 mb-1">
+                {{ (doc.created_at || doc.uploaded_at) | date:'short' }}
+              </p>
+              <p class="text-xs text-gray-500" *ngIf="doc.qdrant_points !== undefined">
+                Qdrant Points: {{ doc.qdrant_points }}
+              </p>
             </div>
           </div>
         </div>
@@ -69,5 +77,12 @@ export class DocumentsComponent implements OnInit {
       next: (stores) => this.vectorStores = stores,
       error: (error) => console.error('Error loading vector stores:', error)
     });
+  }
+
+  getVectorStoreLabel(doc: Document): string {
+    if (doc.vector_store && typeof doc.vector_store === 'object') {
+      return doc.vector_store.name;
+    }
+    return doc.vector_store_id || '';
   }
 }

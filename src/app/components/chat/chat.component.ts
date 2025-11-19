@@ -105,8 +105,7 @@ export class ChatComponent implements OnInit {
 
       const messageData = {
         thread_id: this.currentThread.id,
-        role: 'user' as const,
-        content: content
+        content
       };
 
       this.messageService.create(messageData).subscribe({

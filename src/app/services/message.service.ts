@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { 
-  Message, 
-  MessageCreate, 
-  MessageFeedback, 
-  MessageFeedbackCreate 
+import {
+  Message,
+  MessageCreate,
+  MessageFeedback,
+  MessageFeedbackCreate,
+  MessageListParams
 } from '../models/message.model';
 import { AuthService } from './auth.service';
 
@@ -30,22 +31,26 @@ export class MessageService {
     return this.http.post<Message>(`${this.apiUrl}/message/${token}/`, data);
   }
 
-  list(): Observable<Message[]> {
+  list(params?: MessageListParams): Observable<Message[]> {
     const token = this.getToken();
-    return this.http.get<Message[]>(`${this.apiUrl}/message/${token}/list/`);
+    let httpParams = new HttpParams();
+    if (params?.thread_id) {
+      httpParams = httpParams.set('thread_id', params.thread_id);
+    }
+    return this.http.get<Message[]>(`${this.apiUrl}/message/${token}/list/`, { params: httpParams });
   }
 
-  get(id: string): Observable<Message> {
+  get(id: number): Observable<Message> {
     const token = this.getToken();
     return this.http.get<Message>(`${this.apiUrl}/message/${token}/${id}/`);
   }
 
-  update(id: string, data: Partial<MessageCreate>): Observable<Message> {
+  update(id: number, data: Partial<MessageCreate>): Observable<Message> {
     const token = this.getToken();
     return this.http.patch<Message>(`${this.apiUrl}/message/${token}/${id}/`, data);
   }
 
-  delete(id: string): Observable<void> {
+  delete(id: number): Observable<void> {
     const token = this.getToken();
     return this.http.delete<void>(`${this.apiUrl}/message/${token}/${id}/`);
   }
